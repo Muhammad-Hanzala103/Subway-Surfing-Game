@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "high_score": 30773,
+  "upgrades": {
+    "jetpack_level": 1,
+    "magnet_level": 1,
+    "sneakers_level": 1,
+    "multiplier_level": 1
+  },
+  "achievements": {
+    "unlocked": [
+      "near_miss_10",
+      "score_50000",
+      "play_10",
+      "score_10000",
+      "distance_500",
+      "combo_10",
+      "distance_100",
+      "coins_100",
+      "first_run",
+      "combo_30"
+    ],
+    "stats": {
+      "total_coins": 194,
+      "total_distance": 534,
+      "total_games": 17,
+      "max_combo": 185,
+      "total_near_miss": 12,
+      "total_powerups": 0,
+      "missions_completed": 0
+    }
+  },
+  "daily_challenges": {
+    "last_refresh": "2026-02-21",
+    "total_completed": 2,
+    "missions": [
+      {
+        "type": "power_up_count",
+        "target": 5,
+        "difficulty": 1,
+        "progress": 0,
+        "completed": false,
+        "reward_claimed": false,
+        "reward": 25
+      },
+      {
+        "type": "score_target",
+        "target": 25000,
+        "difficulty": 2,
+        "progress": 1979.0,
+        "completed": false,
+        "reward_claimed": false,
+        "reward": 50000
+      },
+      {
+        "type": "slide_count",
+        "target": 80,
+        "difficulty": 3,
+        "progress": 0,
+        "completed": false,
+        "reward_claimed": false,
+        "reward": 720
+      }
+    ]
+  }
+}
