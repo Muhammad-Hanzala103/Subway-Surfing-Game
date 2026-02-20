@@ -1,0 +1,44 @@
+============================= test session starts =============================
+platform win32 -- Python 3.13.12, pytest-9.0.2, pluggy-1.6.0
+rootdir: C:\New folder\Projects\Subway Surfing Game
+plugins: mock-3.15.1
+collected 2 items / 2 errors
+
+=================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_save_repository.py ________________
+ImportError while importing test module 'C:\New folder\Projects\Subway Surfing Game\tests\test_save_repository.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3312.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_save_repository.py:5: in <module>
+    from game.save_repository import SaveRepository
+game\__init__.py:6: in <module>
+    from .game_manager import GameManager
+game\game_manager.py:5: in <module>
+    import pygame
+E   ModuleNotFoundError: No module named 'pygame'
+_________________ ERROR collecting tests/test_shop_service.py _________________
+ImportError while importing test module 'C:\New folder\Projects\Subway Surfing Game\tests\test_shop_service.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.3312.0_x64__qbz5n2kfra8p0\Lib\importlib\__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_shop_service.py:2: in <module>
+    from services.shop_service import ShopService
+services\__init__.py:4: in <module>
+    from .progress_service import ProgressService, RunSummary
+services\progress_service.py:4: in <module>
+    from game.save_repository import SaveRepository
+game\__init__.py:6: in <module>
+    from .game_manager import GameManager
+game\game_manager.py:5: in <module>
+    import pygame
+E   ModuleNotFoundError: No module named 'pygame'
+=========================== short test summary info ===========================
+ERROR tests/test_save_repository.py
+ERROR tests/test_shop_service.py
+!!!!!!!!!!!!!!!!!!! Interrupted: 2 errors during collection !!!!!!!!!!!!!!!!!!!
+============================== 2 errors in 1.53s ==============================
