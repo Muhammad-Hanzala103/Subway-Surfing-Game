@@ -1,0 +1,23 @@
+{
+  "unlocked": [
+    "first_run",
+    "combo_30",
+    "score_50000",
+    "near_miss_10",
+    "play_10",
+    "combo_10",
+    "distance_500",
+    "distance_100",
+    "coins_100",
+    "score_10000"
+  ],
+  "stats": {
+    "total_coins": 194,
+    "total_distance": 534,
+    "total_games": 16,
+    "max_combo": 185,
+    "total_near_miss": 12,
+    "total_powerups": 0,
+    "missions_completed": 0
+  }
+}

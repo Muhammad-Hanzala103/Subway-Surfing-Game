@@ -1,0 +1,33 @@
+{
+  "last_refresh": "2026-01-11",
+  "total_completed": 2,
+  "missions": [
+    {
+      "type": "collect_coins",
+      "target": 100,
+      "difficulty": 1,
+      "progress": 100,
+      "completed": true,
+      "reward_claimed": true,
+      "reward": 200
+    },
+    {
+      "type": "combo_target",
+      "target": 30,
+      "difficulty": 2,
+      "progress": 30,
+      "completed": true,
+      "reward_claimed": true,
+      "reward": 300
+    },
+    {
+      "type": "jump_count",
+      "target": 100,
+      "difficulty": 3,
+      "progress": 0,
+      "completed": false,
+      "reward_claimed": false,
+      "reward": 900
+    }
+  ]
+}
