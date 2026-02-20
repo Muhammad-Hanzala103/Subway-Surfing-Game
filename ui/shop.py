@@ -5,8 +5,8 @@ Shop System UI
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
+import math
 import config
-from config import GameState
 
 class ShopMenu:
     """Shop menu for buying upgrades"""
@@ -27,45 +27,45 @@ class ShopMenu:
             "Multiplier": 2000
         }
     
-    def handle_input(self, event):
-        if event.type == KEYDOWN:
-            if event.key == K_UP:
-                self.selected_item = (self.selected_item - 1) % len(self.items)
-                self.menu_system.animation_time = 0 # Pulse effect
-            elif event.key == K_DOWN:
-                self.selected_item = (self.selected_item + 1) % len(self.items)
-                self.menu_system.animation_time = 0
-                
-            elif event.key == K_RETURN or event.key == K_SPACE:
-                self.activate_item()
-                
-            elif event.key == K_ESCAPE:
-                config.CURRENT_STATE = GameState.MENU
-    
+    def handle_key(self, key):
+        if key == K_UP:
+            self.selected_item = (self.selected_item - 1) % len(self.items)
+            self.menu_system.animation_time = 0
+            return None
+        if key == K_DOWN:
+            self.selected_item = (self.selected_item + 1) % len(self.items)
+            self.menu_system.animation_time = 0
+            return None
+        if key in (K_RETURN, K_SPACE):
+            return self.activate_item()
+        if key == K_ESCAPE:
+            return "back"
+        return None
+
     def activate_item(self):
         item = self.items[self.selected_item]
         
         if item == "Back":
-            config.CURRENT_STATE = GameState.MENU
-            return
+            return "back"
             
         # Get current level
-        upgrades = self.game_manager.score_manager.get_upgrades()
+        upgrades = self.game_manager.score.get_upgrades()
         level_key = item.lower() + "_level"
         current_level = upgrades.get(level_key, 1)
         
         if current_level >= 6:
-            return # Max level
+            return "maxed"
             
         # Calculate Cost
         cost = self.base_costs[item] * current_level
         
         # Check money
-        if self.game_manager.score_manager.total_coins >= cost:
+        if self.game_manager.score.total_coins >= cost:
             # Buy
-            self.game_manager.score_manager.total_coins -= cost
-            self.game_manager.score_manager.upgrade_powerup(level_key)
-            # Find a way to verify purchase visual?
+            self.game_manager.score.total_coins -= cost
+            self.game_manager.score.upgrade_powerup(level_key)
+            return "purchased"
+        return "insufficient_funds"
     
     def draw(self):
         # Background
@@ -78,11 +78,11 @@ class ShopMenu:
         self.menu_system.render_text("SHOP", self.menu_system.font_title, (1.0, 0.8, 0.0, 1.0), (cx, self.window.height - 100), center=True)
         
         # Coins Display
-        coins = self.game_manager.score_manager.total_coins
+        coins = self.game_manager.score.total_coins
         self.menu_system.render_text(f"Coins: {coins}", self.menu_system.font_large, (1.0, 1.0, 0.0, 1.0), (self.window.width - 200, self.window.height - 60), center=True)
         
         # Items
-        upgrades = self.game_manager.score_manager.get_upgrades()
+        upgrades = self.game_manager.score.get_upgrades()
         
         for i, item in enumerate(self.items):
             y = cy - (i * 80)

@@ -5,6 +5,10 @@ Score System - Enhanced with combos and near miss
 import json
 import os
 import config
+from core.logging import get_logger
+from .save_repository import SaveRepository
+
+log = get_logger(__name__)
 
 
 class ScoreManager:
@@ -25,6 +29,7 @@ class ScoreManager:
         }
         self.total_coins = 0 # Persistent wallet
         
+        self.save_repo = SaveRepository()
         self.load_high_score()
     
     def update(self, distance_delta, multiplier=1):
@@ -97,28 +102,40 @@ class ScoreManager:
     
     def load_high_score(self):
         """Load high score and save data from file"""
+        self.high_score = 0
+        self.total_coins = 0
         try:
-            if os.path.exists(config.HIGH_SCORE_FILE):
-                with open(config.HIGH_SCORE_FILE, 'r') as f:
-                    data = json.load(f)
-                    self.high_score = data.get('high_score', 0)
-                    self.total_coins = data.get('total_coins', 0)
-                    self.upgrades = data.get('upgrades', self.upgrades)
-        except Exception:
-            self.high_score = 0
-            self.total_coins = 0
+            progress = self.save_repo.load_progress()
+            profile = self.save_repo.load_profile()
+            self.high_score = int(progress.get("high_score", 0))
+            self.total_coins = int(profile.get("total_coins", 0))
+            self.upgrades = progress.get("upgrades", self.upgrades)
+        except (OSError, ValueError, TypeError) as exc:
+            log.warning("Failed to load score data: %s", exc)
     
     def save_high_score(self):
         """Save high score and upgrades to file"""
         try:
-            with open(config.HIGH_SCORE_FILE, 'w') as f:
-                json.dump({
-                    'high_score': self.high_score,
-                    'total_coins': self.total_coins,
-                    'upgrades': self.upgrades
-                }, f)
-        except Exception as e:
-            print(f"Error saving data: {e}")
+            progress = self.save_repo.load_progress()
+            profile = self.save_repo.load_profile()
+            progress["high_score"] = self.high_score
+            progress["upgrades"] = self.upgrades
+            profile["total_coins"] = self.total_coins
+            self.save_repo.save_progress(progress)
+            self.save_repo.save_profile(profile)
+
+            # Backward compatible adapter for legacy readers.
+            with open(config.HIGH_SCORE_FILE, "w", encoding="utf-8") as f:
+                json.dump(
+                    {
+                        "high_score": self.high_score,
+                        "total_coins": self.total_coins,
+                        "upgrades": self.upgrades,
+                    },
+                    f,
+                )
+        except (OSError, ValueError, TypeError) as exc:
+            log.error("Error saving score data: %s", exc)
     
     def reset(self):
         """Reset for new game"""
