@@ -121,8 +121,9 @@ class GameManager:
             self.audio.stop_music()
             self.audio.play_sound('crash')
         
-        self.screen_shake = 0.8
-        self.renderer.shake_camera(0.8)
+        if getattr(self, 'settings', None) and self.settings.get('screen_shake'):
+            self.screen_shake = 0.8
+            self.renderer.shake_camera(0.8)
     
     def handle_input(self, events, keys_pressed):
         """Handle player input"""
@@ -251,8 +252,9 @@ class GameManager:
                 self.game_over()
             else:
                 # Survived due to power-up
-                self.screen_shake = 0.3
-                self.renderer.shake_camera(0.3)
+                if getattr(self, 'settings', None) and self.settings.get('screen_shake'):
+                    self.screen_shake = 0.3
+                    self.renderer.shake_camera(0.3)
         
         # Handle coin collection
         if collision_results['coins_collected']:

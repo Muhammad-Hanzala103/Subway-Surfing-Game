@@ -22,6 +22,7 @@ class Settings:
         'show_tutorial': True,
         'particles_enabled': True,
         'screen_shake': True,
+        'high_contrast': False,
         'difficulty': 'normal',  # easy, normal, hard
         'controls': {
             'left': [K_a, K_LEFT],
@@ -101,6 +102,7 @@ class SettingsMenu:
             {'key': 'show_fps', 'name': 'Show FPS', 'type': 'toggle'},
             {'key': 'particles_enabled', 'name': 'Particles', 'type': 'toggle'},
             {'key': 'screen_shake', 'name': 'Screen Shake', 'type': 'toggle'},
+            {'key': 'high_contrast', 'name': 'High Contrast', 'type': 'toggle'},
             {'key': 'show_tutorial', 'name': 'Show Tutorial', 'type': 'toggle'},
             {'key': 'difficulty', 'name': 'Difficulty', 'type': 'choice', 'choices': ['easy', 'normal', 'hard']},
             {'key': 'left', 'name': 'Move Left', 'type': 'keybind'},

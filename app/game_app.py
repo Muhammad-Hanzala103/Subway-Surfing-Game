@@ -129,6 +129,13 @@ class GameApp:
             # Use scene controller for state updates
             self.scene_controller.update(delta_time, events, keys)
             
+            # Apply High Contrast background if enabled
+            from OpenGL.GL import glClearColor
+            if self.settings.get('high_contrast'):
+                glClearColor(0.0, 0.0, 0.0, 1.0)
+            else:
+                glClearColor(0.1, 0.1, 0.15, 1.0)
+                
             # Clear and draw using scene controller
             self.window.clear()
             self.scene_controller.render()
