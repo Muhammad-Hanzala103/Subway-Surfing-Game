@@ -2,6 +2,7 @@
 Subway Surfer Clone - Configuration
 All game settings and constants
 """
+from enum import Enum, auto
 
 # Window Settings
 WINDOW_WIDTH = 1280
@@ -123,13 +124,12 @@ CONTROLS = {
 }
 
 # Game States
-class GameState:
-    MENU = 0
-    PLAYING = 1
-    PAUSED = 2
-    GAME_OVER = 3
-    SHOP = 4
-    TUTORIAL = 'tutorial'
+class GameState(Enum):
+    MENU = auto()
+    PLAYING = auto()
+    PAUSED = auto()
+    GAME_OVER = auto()
+    SHOP = auto()
 
 # Difficulty Scaling
 DIFFICULTY_INCREASE_INTERVAL = 30.0  # seconds
