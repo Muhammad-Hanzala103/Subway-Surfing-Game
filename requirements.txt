@@ -1,5 +1,9 @@
-pygame>=2.5.0
-PyOpenGL>=3.1.6
-PyOpenGL-accelerate>=3.1.6
-numpy>=1.24.0
-Pillow>=10.0.0
+# Python Version >= 3.9
+pygame>=2.5.0,<3.0.0
+PyOpenGL>=3.1.6,<3.2.0
+PyOpenGL-accelerate>=3.1.6,<3.2.0
+numpy>=1.24.0,<2.0.0
+Pillow>=10.0.0,<11.0.0
+
+# Testing
+pytest>=7.4.2,<9.0.0
