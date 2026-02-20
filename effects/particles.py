@@ -57,8 +57,14 @@ class ParticleSystem:
     def emit(self, position, count, color, speed_range=(2, 5), 
              size_range=(5, 15), lifetime=1.0, gravity=True, spread=1.0):
         """Emit particles at position"""
-        for _ in range(count):
+        
+        # FPS-aware scaling: scale down particle count if FPS drops to maintain performance
+        fps_ratio = min(1.0, config.FPS / 60.0) 
+        actual_count = max(1, int(count * fps_ratio))
+        
+        for _ in range(actual_count):
             if len(self.particles) >= self.max_particles:
+                # Remove oldest particle if at limit
                 self.particles.pop(0)
             
             velocity = np.array([
