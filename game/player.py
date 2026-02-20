@@ -4,7 +4,6 @@ Includes Hoverboard, Jetpack, Super Sneakers, and Trail Effects
 """
 
 import numpy as np
-import math
 from OpenGL.GL import *
 from enum import Enum
 

@@ -4,7 +4,6 @@ Track/Road Generation System - Enhanced with Multiple Themes
 
 import numpy as np
 import random
-import math
 import config
 from engine.mesh import create_plane, create_cube
 

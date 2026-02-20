@@ -1,4 +1,3 @@
-import pytest
 from app.scene_controller import SceneController
 from config import GameState
 

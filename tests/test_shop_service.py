@@ -1,6 +1,5 @@
 import pytest
 from services.shop_service import ShopService
-import config
 
 class DummyScoreManager:
     def __init__(self):

@@ -6,7 +6,6 @@ Shows all power-ups, combo, and advanced stats
 import pygame
 from pygame.locals import *
 from OpenGL.GL import *
-import math
 import config
 
 

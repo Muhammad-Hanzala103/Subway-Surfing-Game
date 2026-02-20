@@ -6,8 +6,6 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 import math
-import config
-from config import GameState
 
 
 class MenuSystem:
@@ -25,7 +23,6 @@ class MenuSystem:
         
         self.text_cache = {}  # { (text, color_tuple): (tex_id, w, h) }
         
-        from .shop import ShopMenu
         self.shop_menu = None # initialized by game manager to avoid circular import issues or set later
     
     def set_game_manager(self, game_manager):

@@ -2,11 +2,9 @@
 Shop System UI
 """
 
-import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 import math
-import config
 
 class ShopMenu:
     """Shop menu for buying upgrades"""

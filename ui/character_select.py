@@ -6,9 +6,8 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 import math
-import numpy as np
 
-from game.character import Character, CharacterType, CharacterManager
+from game.character import Character
 
 
 class CharacterSelectMenu:

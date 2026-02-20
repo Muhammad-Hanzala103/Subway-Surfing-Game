@@ -2,9 +2,7 @@
 Game Manager - Enhanced with All Advanced Features
 """
 
-import pygame
 from pygame.locals import *
-import random
 import config
 from config import GameState
 

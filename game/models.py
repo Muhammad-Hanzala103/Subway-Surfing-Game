@@ -4,9 +4,8 @@ Procedural generation of complex game objects
 """
 
 import math
-import numpy as np
 from engine.model import Model
-from engine.mesh import create_cube, create_sphere, create_cylinder
+from engine.mesh import create_cube
 import config
 
 

@@ -2,9 +2,8 @@
 Character System - Multiple playable characters with stats
 """
 
-import numpy as np
 from enum import Enum
-from engine.mesh import create_cube, create_sphere, create_cylinder
+from engine.mesh import create_cube
 
 
 class CharacterType(Enum):

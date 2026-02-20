@@ -8,10 +8,8 @@ from OpenGL.GLU import *
 import numpy as np
 import math
 
-from .camera import Camera, create_orthographic_matrix
-from .mesh import create_cube, create_plane
+from .camera import Camera
 from .texture import TextureManager
-import config
 
 
 from .shader import ShaderProgram

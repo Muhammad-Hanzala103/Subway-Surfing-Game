@@ -2,7 +2,6 @@
 Game Application Core
 """
 
-import os
 import pygame
 from pygame.locals import *
 
@@ -11,7 +10,6 @@ from config import GameState
 from engine import Window, Renderer
 from game import GameManager, CharacterManager, DailyChallenges, Achievements
 from game.player import PlayerState
-from game.collectible import PowerUpType
 from game.missions import MissionType
 from audio import AudioManager
 from ui import MenuSystem, HUD, TutorialSystem, SettingsMenu, CharacterSelectMenu, Settings
