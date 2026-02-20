@@ -125,9 +125,8 @@ class SubwaySurferGame:
                 with open('player_data.json', 'r') as f:
                     data = json.load(f)
                     self.total_coins = data.get('total_coins', 0)
-        except:
-            pass
-    
+        except Exception as e:
+            print(f"Error loading player data: {e}")
     def _save_player_data(self):
         """Save persistent player data"""
         import json
@@ -136,9 +135,8 @@ class SubwaySurferGame:
                 json.dump({
                     'total_coins': self.total_coins
                 }, f)
-        except:
-            pass
-
+        except Exception as e:
+            print(f"Error saving player data: {e}")
     def run(self):
         """Main game loop"""
         while self.window.running:
@@ -176,28 +174,10 @@ class SubwaySurferGame:
         if self.menu.shop_menu:
             for event_type, event_data in events:
                 if event_type == 'keydown':
-                    # Create a mock event for the shop menu which expects pygame event object
-                    # Our window class returns (type, data) tuples
-                    # We need to adapt this or change shop menu to accept key codes
-                    # EASIER: Just modify shop menu to accept key code
-                    pass
-
-            # Direct input handling via pygame events wrapper
-            # Since our Window class wraps events, we need to pass them correctly
-            # Actually, let's just use the Pygame event queue directly if needed,
-            # BUT Window.handle_events_generator consumes them?
-            # Window.handle_events returns a list of (type, data).
-            
-            for event_type, event_data in events:
-                 if event_type == 'keydown':
-                    # Mocking an object with type and key attributes for compatibility
-                    class MockEvent:
-                        def __init__(self, t, k):
-                            self.type = t
-                            self.key = k
-                    
-                    mock = MockEvent(KEYDOWN, event_data)
-                    self.menu.shop_menu.handle_input(mock)
+                    result = self.menu.shop_menu.handle_key(event_data)
+                    if result == "back":
+                        self.game.state = GameState.MENU
+                        self.total_coins = self.game.score.total_coins  # sync back
 
     def _handle_menu_state(self, events, delta_time):
         """Handle menu state"""

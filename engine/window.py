@@ -29,7 +29,6 @@ class Window:
     def _init_pygame(self):
         """Initialize Pygame with OpenGL context"""
         pygame.init()
-        pygame.mixer.init()
         
         # Set basic OpenGL attributes (Windows compatible)
         pygame.display.gl_set_attribute(pygame.GL_DEPTH_SIZE, config.DEPTH_BUFFER_SIZE)
