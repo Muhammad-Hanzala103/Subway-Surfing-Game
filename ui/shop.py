@@ -48,24 +48,9 @@ class ShopMenu:
         if item == "Back":
             return "back"
             
-        # Get current level
-        upgrades = self.game_manager.score.get_upgrades()
-        level_key = item.lower() + "_level"
-        current_level = upgrades.get(level_key, 1)
-        
-        if current_level >= 6:
-            return "maxed"
-            
-        # Calculate Cost
-        cost = self.base_costs[item] * current_level
-        
-        # Check money
-        if self.game_manager.score.total_coins >= cost:
-            # Buy
-            self.game_manager.score.total_coins -= cost
-            self.game_manager.score.upgrade_powerup(level_key)
-            return "purchased"
-        return "insufficient_funds"
+        from services.shop_service import ShopService
+        shop = ShopService(self.game_manager.score)
+        return shop.purchase_upgrade(item)
     
     def draw(self):
         # Background

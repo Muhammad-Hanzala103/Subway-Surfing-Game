@@ -104,23 +104,18 @@ class GameApp:
     
     def _load_player_data(self):
         """Load persistent player data"""
-        import json
         try:
-            if os.path.exists('player_data.json'):
-                with open('player_data.json', 'r') as f:
-                    data = json.load(f)
-                    self.total_coins = data.get('total_coins', 0)
+            profile = self.game.score.save_repo.load_profile()
+            self.total_coins = profile.get('total_coins', 0)
         except Exception as e:
             print(f"Error loading player data: {e}")
             
     def _save_player_data(self):
         """Save persistent player data"""
-        import json
         try:
-            with open('player_data.json', 'w') as f:
-                json.dump({
-                    'total_coins': self.total_coins
-                }, f)
+            profile = self.game.score.save_repo.load_profile()
+            profile['total_coins'] = self.total_coins
+            self.game.score.save_repo.save_profile(profile)
         except Exception as e:
             print(f"Error saving player data: {e}")
             

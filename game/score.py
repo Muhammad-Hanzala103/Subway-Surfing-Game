@@ -72,33 +72,17 @@ class ScoreManager:
     def get_distance(self):
         return int(self.distance)
     
-    def get_upgrades(self):
-        return self.upgrades
-        
-    def upgrade_powerup(self, key):
-        if key in self.upgrades:
-            self.upgrades[key] += 1
-            self.save_high_score() # Save progress
-    
-    def get_stats(self):
-        """Get game stats for game over screen"""
-        return {
-            'score': self.score,
-            'high_score': self.high_score,
-            'coins': self.coins_collected,
-            'distance': int(self.distance),
-            'near_misses': self.near_misses,
-            'powerups': self.powerups_collected,
-            'mystery_boxes': self.mystery_boxes_opened
-        }
-    
     def check_high_score(self):
-        """Check and update high score"""
-        if self.score > self.high_score:
-            self.high_score = self.score
-            self.save_high_score()
-            return True
-        return False
+        """Check and update high score (Legacy method - use ProgressService instead)"""
+        from services.progress_service import ProgressService
+        service = ProgressService(self.save_repo)
+        summary = service.process_run(
+            self.score, self.coins_collected, int(self.distance),
+            self.near_misses, self.powerups_collected, self.mystery_boxes_opened
+        )
+        self.high_score = summary.high_score
+        self.total_coins += self.coins_collected
+        return summary.new_high_score
     
     def load_high_score(self):
         """Load high score and save data from file"""

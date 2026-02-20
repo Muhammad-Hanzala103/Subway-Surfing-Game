@@ -197,26 +197,29 @@ class DailyChallenges:
     
     def save(self):
         """Save to file"""
+        from game.save_repository import SaveRepository
         try:
-            data = {
+            repo = SaveRepository()
+            progress = repo.load_progress()
+            progress["daily_challenges"] = {
                 'last_refresh': self.last_refresh_date,
                 'total_completed': self.total_completed,
                 'missions': [m.to_dict() for m in self.missions]
             }
-            with open(self.SAVE_FILE, 'w') as f:
-                json.dump(data, f, indent=2)
+            repo.save_progress(progress)
         except Exception as e:
             print(f"Error saving challenges: {e}")
     
     def load(self):
         """Load from file"""
+        from game.save_repository import SaveRepository
         try:
-            if os.path.exists(self.SAVE_FILE):
-                with open(self.SAVE_FILE, 'r') as f:
-                    data = json.load(f)
-                    self.last_refresh_date = data.get('last_refresh')
-                    self.total_completed = data.get('total_completed', 0)
-                    self.missions = [Mission.from_dict(m) for m in data.get('missions', [])]
+            repo = SaveRepository()
+            progress = repo.load_progress()
+            data = progress.get("daily_challenges", {})
+            self.last_refresh_date = data.get('last_refresh')
+            self.total_completed = data.get('total_completed', 0)
+            self.missions = [Mission.from_dict(m) for m in data.get('missions', [])]
         except Exception as e:
             print(f"Error loading challenges: {e}")
             self.missions = []
@@ -316,21 +319,25 @@ class Achievements:
         return len(self.unlocked) / len(self.ACHIEVEMENTS)
     
     def save(self):
+        from game.save_repository import SaveRepository
         try:
-            with open(self.SAVE_FILE, 'w') as f:
-                json.dump({
-                    'unlocked': list(self.unlocked),
-                    'stats': self.stats
-                }, f, indent=2)
+            repo = SaveRepository()
+            progress = repo.load_progress()
+            progress["achievements"] = {
+                'unlocked': list(self.unlocked),
+                'stats': self.stats
+            }
+            repo.save_progress(progress)
         except Exception as e:
             print(f"Error saving achievements: {e}")
     
     def load(self):
+        from game.save_repository import SaveRepository
         try:
-            if os.path.exists(self.SAVE_FILE):
-                with open(self.SAVE_FILE, 'r') as f:
-                    data = json.load(f)
-                    self.unlocked = set(data.get('unlocked', []))
-                    self.stats.update(data.get('stats', {}))
+            repo = SaveRepository()
+            progress = repo.load_progress()
+            data = progress.get("achievements", {})
+            self.unlocked = set(data.get('unlocked', []))
+            self.stats.update(data.get('stats', {}))
         except Exception as e:
             print(f"Error loading achievements: {e}")

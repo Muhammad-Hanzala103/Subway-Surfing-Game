@@ -31,9 +31,13 @@ class Settings:
     
     def load(self):
         """Load settings from file"""
+        from game.save_repository import SaveRepository
         try:
-            if os.path.exists(self.SETTINGS_FILE):
-                with open(self.SETTINGS_FILE, 'r') as f:
+            repo = SaveRepository()
+            profile = repo.load_profile()
+            settings_file = profile.get("settings_file", self.SETTINGS_FILE)
+            if os.path.exists(settings_file):
+                with open(settings_file, 'r') as f:
                     loaded = json.load(f)
                     self.data.update(loaded)
         except Exception as e:
@@ -41,9 +45,14 @@ class Settings:
     
     def save(self):
         """Save settings to file"""
+        from game.save_repository import SaveRepository
         try:
-            with open(self.SETTINGS_FILE, 'w') as f:
-                json.dump(self.data, f, indent=2)
+            repo = SaveRepository()
+            profile = repo.load_profile()
+            settings_file = profile.get("settings_file", self.SETTINGS_FILE)
+            
+            # Atomic write support from repository
+            repo._atomic_write_json(settings_file, self.data)
         except Exception as e:
             print(f"Error saving settings: {e}")
     

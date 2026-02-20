@@ -23,6 +23,8 @@ class MenuSystem:
         self.font_medium = pygame.font.Font(None, 48)
         self.font_small = pygame.font.Font(None, 32)
         
+        self.text_cache = {}  # { (text, color_tuple): (tex_id, w, h) }
+        
         from .shop import ShopMenu
         self.shop_menu = None # initialized by game manager to avoid circular import issues or set later
     
@@ -33,10 +35,30 @@ class MenuSystem:
     def update(self, delta_time):
         self.animation_time += delta_time
     
-    def render_text(self, text, font, color, position, center=False):
-        """Render text to screen"""
+    def _get_cached_text(self, text, font, color):
+        """Get or create cached text texture"""
+        # color can be variable due to pulsing, caching only exact matches
+        cache_key = (text, tuple(color))
+        
+        if cache_key in self.text_cache:
+            return self.text_cache[cache_key]
+            
         surface = font.render(text, True, color)
         text_data = pygame.image.tostring(surface, "RGBA", False)
+        w, h = surface.get_size()
+        
+        tex_id = glGenTextures(1)
+        glBindTexture(GL_TEXTURE_2D, tex_id)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, text_data)
+        
+        self.text_cache[cache_key] = (tex_id, w, h)
+        return tex_id, w, h
+
+    def render_text(self, text, font, color, position, center=False):
+        """Render text to screen using cache"""
+        tex_id, w, h = self._get_cached_text(text, font, color)
         
         glPushAttrib(GL_ALL_ATTRIB_BITS)
         glDisable(GL_DEPTH_TEST)
@@ -44,19 +66,11 @@ class MenuSystem:
         glEnable(GL_BLEND)
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
         
-        tex_id = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, tex_id)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, surface.get_width(), 
-                     surface.get_height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, text_data)
-        
         x, y = position
-        w, h = surface.get_size()
-        
         if center:
             x -= w // 2
         
+        glBindTexture(GL_TEXTURE_2D, tex_id)
         glEnable(GL_TEXTURE_2D)
         glColor4f(1, 1, 1, 1)
         glBegin(GL_QUADS)
@@ -67,7 +81,6 @@ class MenuSystem:
         glEnd()
         glDisable(GL_TEXTURE_2D)
         
-        glDeleteTextures(1, [tex_id])
         glPopAttrib()
         
         return (w, h)
