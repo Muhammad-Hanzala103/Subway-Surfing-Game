@@ -126,37 +126,42 @@ class GameManager:
     
     def handle_input(self, events, keys_pressed):
         """Handle player input"""
+        if not hasattr(self, 'settings'):
+            from ui.settings import Settings
+            self.settings = Settings()
+            
         if self.state == GameState.PLAYING:
             for event_type, event_data in events:
                 if event_type == 'keydown':
-                    key = event_data
+                    action = self.settings.get_action(event_data)
                     
-                    # Lane switching (Swapped to fix visual direction)
-                    if key in [K_a, K_LEFT]:
+                    # Lane switching
+                    if action == 'left':
                         if self.player.move_right() and self.audio:
                             self.audio.play_sound('swoosh')
-                    elif key in [K_d, K_RIGHT]:
+                    elif action == 'right':
                         if self.player.move_left() and self.audio:
                             self.audio.play_sound('swoosh')
                     
                     # Jump
-                    elif key in [K_w, K_UP, K_SPACE]:
+                    elif action == 'jump':
                         if self.player.jump() and self.audio:
                             self.audio.play_sound('jump')
                     
                     # Slide
-                    elif key in [K_s, K_DOWN]:
+                    elif action == 'slide':
                         if self.player.slide() and self.audio:
                             self.audio.play_sound('slide')
                     
                     # Pause
-                    elif key in [K_ESCAPE, K_p]:
+                    elif action == 'pause':
                         self.pause_game()
         
         elif self.state == GameState.PAUSED:
             for event_type, event_data in events:
                 if event_type == 'keydown':
-                    if event_data in [K_ESCAPE, K_p]:
+                    action = self.settings.get_action(event_data)
+                    if action == 'pause':
                         self.resume_game()
         
         elif self.state == GameState.GAME_OVER:

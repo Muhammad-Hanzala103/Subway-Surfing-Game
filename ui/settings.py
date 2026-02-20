@@ -22,7 +22,14 @@ class Settings:
         'show_tutorial': True,
         'particles_enabled': True,
         'screen_shake': True,
-        'difficulty': 'normal'  # easy, normal, hard
+        'difficulty': 'normal',  # easy, normal, hard
+        'controls': {
+            'left': [K_a, K_LEFT],
+            'right': [K_d, K_RIGHT],
+            'jump': [K_w, K_UP, K_SPACE],
+            'slide': [K_s, K_DOWN],
+            'pause': [K_ESCAPE, K_p]
+        }
     }
     
     def __init__(self):
@@ -63,6 +70,14 @@ class Settings:
         self.data[key] = value
         self.save()
 
+    def get_action(self, key_event_code):
+        """Map a pygame key code to a logical action string."""
+        controls = self.get('controls')
+        for action, keys in controls.items():
+            if key_event_code in keys:
+                return action
+        return None
+
 
 class SettingsMenu:
     """Settings menu UI"""
@@ -88,8 +103,14 @@ class SettingsMenu:
             {'key': 'screen_shake', 'name': 'Screen Shake', 'type': 'toggle'},
             {'key': 'show_tutorial', 'name': 'Show Tutorial', 'type': 'toggle'},
             {'key': 'difficulty', 'name': 'Difficulty', 'type': 'choice', 'choices': ['easy', 'normal', 'hard']},
+            {'key': 'left', 'name': 'Move Left', 'type': 'keybind'},
+            {'key': 'right', 'name': 'Move Right', 'type': 'keybind'},
+            {'key': 'jump', 'name': 'Jump', 'type': 'keybind'},
+            {'key': 'slide', 'name': 'Slide', 'type': 'keybind'},
             {'key': 'back', 'name': '< Back', 'type': 'action'}
         ]
+        
+        self.waiting_for_key = False
     
     def open(self):
         self.active = True
@@ -108,6 +129,20 @@ class SettingsMenu:
             if event_type == 'keydown':
                 key = event_data
                 
+                if self.waiting_for_key:
+                    if key == K_ESCAPE:
+                        self.waiting_for_key = False
+                        return None
+                    
+                    option = self.options[self.selected_index]
+                    controls = self.settings.get('controls')
+                    if option['key'] in controls:
+                        # For simplicity, we just set the primary key (index 0) to the new key
+                        controls[option['key']][0] = key
+                        self.settings.set('controls', controls)
+                    self.waiting_for_key = False
+                    return None
+                
                 # Navigation
                 if key in [K_w, K_UP]:
                     self.selected_index = (self.selected_index - 1) % len(self.options)
@@ -117,14 +152,16 @@ class SettingsMenu:
                 # Selection/Change
                 option = self.options[self.selected_index]
                 
-                if key in [K_a, K_LEFT]:
+                if key in [K_a, K_LEFT] and option['type'] != 'keybind':
                     self._change_option(option, -1)
-                elif key in [K_d, K_RIGHT]:
+                elif key in [K_d, K_RIGHT] and option['type'] != 'keybind':
                     self._change_option(option, 1)
                 elif key in [K_RETURN, K_SPACE]:
                     if option['type'] == 'toggle':
                         current = self.settings.get(option['key'])
                         self.settings.set(option['key'], not current)
+                    elif option['type'] == 'keybind':
+                        self.waiting_for_key = True
                     elif option['type'] == 'action':
                         if option['key'] == 'back':
                             self.close()
@@ -292,10 +329,23 @@ class SettingsMenu:
                 self.render_text(f"< {value.upper()} >", self.font_value,
                                (200, 200, 100), (cx + 80, y + 5))
             
+            elif option['type'] == 'keybind':
+                if is_selected and self.waiting_for_key:
+                    text = "PRESS ANY KEY..."
+                    color = (255, 255, 100)
+                else:
+                    controls = self.settings.get('controls')
+                    # Display the name of the first mapped key
+                    bound_key = controls.get(option['key'], [None])[0]
+                    text = pygame.key.name(bound_key).upper() if bound_key else "NONE"
+                    color = (100, 255, 100)
+                
+                self.render_text(f"[ {text} ]", self.font_value, color, (cx + 80, y + 5))
+            
             y -= 50
         
         # Hints
-        self.render_text("W/S: Navigate | A/D: Change | Enter: Select | ESC: Back", 
+        self.render_text("W/S: Navigate | A/D: Change | Enter: Select/Rebind | ESC: Back", 
                         self.font_hint, (120, 120, 120), (cx, 30), center=True)
         
         glMatrixMode(GL_PROJECTION)
