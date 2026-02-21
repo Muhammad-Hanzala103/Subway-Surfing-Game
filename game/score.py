@@ -61,6 +61,16 @@ class ScoreManager:
         """Track mystery box opening"""
         self.mystery_boxes_opened += 1
         self.score += 50  # Bonus for opening box
+        
+    def get_upgrades(self):
+        """Get power-up upgrades dictionary"""
+        return self.upgrades
+        
+    def upgrade_powerup(self, key):
+        """Upgrade a specific powerup"""
+        if key in self.upgrades:
+            self.upgrades[key] += 1
+            self.save_high_score()
     
     def get_score(self):
         return self.score
