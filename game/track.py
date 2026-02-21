@@ -89,6 +89,9 @@ class TrackSegment:
         self.track_mesh = create_plane(config.TRACK_WIDTH, self.length)
         self.track_color = self.theme['track_color']
         
+        # Create solid floor/ground mesh
+        self.floor_mesh = create_plane(config.TRACK_WIDTH * 10, self.length)
+        
         # Generate track texture
         from engine.texture import TextureGenerator
         self.texture = TextureGenerator.create_noise(
@@ -225,6 +228,22 @@ class TrackManager:
     
     def draw(self, renderer):
         for segment in self.segments:
+            # Draw floor/ground layer
+            floor_mat = segment.get_track_matrix()
+            floor_mat[1, 3] = -0.05  # Push floor slightly further down
+            floor_color = (
+                segment.track_color[0] * 0.7, 
+                segment.track_color[1] * 0.7, 
+                segment.track_color[2] * 0.7, 
+                1.0
+            )
+            renderer.draw_mesh(
+                segment.floor_mesh,
+                floor_mat,
+                floor_color,
+                texture=segment.texture
+            )
+
             # Draw track with texture
             # Use white color so texture colors show through fully
             renderer.draw_mesh(
