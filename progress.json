@@ -9,21 +9,21 @@
   },
   "achievements": {
     "unlocked": [
-      "near_miss_10",
-      "score_50000",
-      "play_10",
       "score_10000",
       "distance_500",
-      "combo_10",
       "distance_100",
       "coins_100",
-      "first_run",
-      "combo_30"
+      "score_50000",
+      "combo_30",
+      "combo_10",
+      "near_miss_10",
+      "play_10",
+      "first_run"
     ],
     "stats": {
       "total_coins": 194,
       "total_distance": 534,
-      "total_games": 17,
+      "total_games": 18,
       "max_combo": 185,
       "total_near_miss": 12,
       "total_powerups": 0,
@@ -47,7 +47,7 @@
         "type": "score_target",
         "target": 25000,
         "difficulty": 2,
-        "progress": 1979.0,
+        "progress": 985.0,
         "completed": false,
         "reward_claimed": false,
         "reward": 50000

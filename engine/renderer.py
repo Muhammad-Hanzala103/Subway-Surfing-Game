@@ -47,20 +47,29 @@ class Renderer:
     def _setup_lighting(self):
         """Setup OpenGL fixed-function lighting"""
         glEnable(GL_LIGHTING)
+        
+        # Main Directional Light
         glEnable(GL_LIGHT0)
-        
-        # Light position/direction
-        light_pos = [self.light_dir[0], self.light_dir[1], self.light_dir[2], 0.0]
-        glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
-        
-        # Light colors
+        light0_pos = [self.light_dir[0], self.light_dir[1], self.light_dir[2], 0.0]
+        glLightfv(GL_LIGHT0, GL_POSITION, light0_pos)
         glLightfv(GL_LIGHT0, GL_DIFFUSE, [1.0, 0.95, 0.9, 1.0])
-        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.4, 0.4, 0.5, 1.0])
-        glLightfv(GL_LIGHT0, GL_SPECULAR, [0.5, 0.5, 0.5, 1.0])
+        glLightfv(GL_LIGHT0, GL_AMBIENT, [0.4, 0.4, 0.45, 1.0])
+        glLightfv(GL_LIGHT0, GL_SPECULAR, [0.8, 0.8, 0.8, 1.0])
+        
+        # Fill Light (Opposite side, cooler, dimmer)
+        glEnable(GL_LIGHT1)
+        light1_pos = [-self.light_dir[0], self.light_dir[1] * 0.5, -self.light_dir[2], 0.0]
+        glLightfv(GL_LIGHT1, GL_POSITION, light1_pos)
+        glLightfv(GL_LIGHT1, GL_DIFFUSE, [0.2, 0.3, 0.5, 1.0])
+        glLightfv(GL_LIGHT1, GL_SPECULAR, [0.1, 0.1, 0.2, 1.0])
         
         # Enable color material
         glEnable(GL_COLOR_MATERIAL)
         glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
+        
+        # Material properties for shininess
+        glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, [1.0, 1.0, 1.0, 1.0])
+        glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 50.0)
         
         # Smooth shading
         glShadeModel(GL_SMOOTH)
@@ -106,6 +115,9 @@ class Renderer:
         # Update light position
         light_pos = [self.light_dir[0], self.light_dir[1], self.light_dir[2], 0.0]
         glLightfv(GL_LIGHT0, GL_POSITION, light_pos)
+        
+        light1_pos = [-self.light_dir[0], self.light_dir[1] * 0.5, -self.light_dir[2], 0.0]
+        glLightfv(GL_LIGHT1, GL_POSITION, light1_pos)
         
         # Activate Shader
         if self.shader:
